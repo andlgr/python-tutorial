@@ -9,7 +9,7 @@ from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 import abc
 
 class Signal(QObject):
-    trigger = pyqtSignal(object, name="trigger")
+    trigger = pyqtSignal(object, name="trigger")  # Mandatory to be outside ctor (why?)
 
     def __init__(self):
         super().__init__()
@@ -52,7 +52,7 @@ class MyClassWithList(SlotInterface):
 def main():
     printf("Playing with signal/slot\n")
 
-    # Emit a string
+    # Test for string
     slot_1 = MyClass(1)
     slot_2 = MyClass(2)
 
@@ -60,17 +60,15 @@ def main():
     signal.trigger.connect(slot_1.on_signal)
     signal.trigger.connect(slot_2.on_signal)
 
-    signal.trigger.emit("I am a string.")
-
-    # Emit a list
+    # Test for list
     slot_with_list = MyClassWithList(3)
 
     signal_with_list = Signal()
-
     signal_with_list.trigger.connect(slot_with_list.on_signal)
 
+    # Emit
+    signal.trigger.emit("I am a string.")
     signal_with_list.trigger.emit(["Apple", "Orange", "Grape."])
-
     signal.trigger.emit("I am another string!")
     signal_with_list.trigger.emit(["I", "am", "another", "list!"])
 
