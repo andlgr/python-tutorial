@@ -12,6 +12,9 @@ class MyFirstClass:
         printf("Name: " + self.__name_)
         printf("\nAge: " + str(self.__age_))
 
+    def get_name(self) -> str:  # annotate return type, also forcing conversion
+        return self.__name_
+
 
 class MyFirstInheritance(MyFirstClass):
     pass  # Use the 'pass' keyword when you do not want to add any other properties or methods to the class.
@@ -27,7 +30,7 @@ class MySecondClass(MyFirstInheritance):
         printf("\nProfession: " + self.__profession_)
 
 
-def main():
+def main():  # implicit '-> None', equivalent to C/C++ void return
     printf("Hello World!\n\n")
 
     # Objects creation
@@ -44,6 +47,8 @@ def main():
     engineer.print_info()
     printf("\n\n")
 
+    printf(andre.get_name())
+    printf("\n\n")
 
 # Only execute main() if this file is launched through terminal
 if __name__ == "__main__":

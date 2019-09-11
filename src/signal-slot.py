@@ -33,6 +33,9 @@ class MyClass(SlotInterface):
 
     # Inherited from SlotInterface
     def on_signal(self, argument):
+        if not isinstance(argument, str):
+            printf("id: " + str(self.__id_) + " - Error: invalid type while executing on_signal - not a string\n")
+            return
         printf("string - id: " + str(self.__id_) + " - on_signal: " + argument + "\n")
 
 
@@ -43,6 +46,9 @@ class MyClassWithList(SlotInterface):
 
     # Inherited from SlotInterface
     def on_signal(self, argument):
+        if not isinstance(argument, list):
+            printf("id: " + str(self.__id_) + " - Error: invalid type while executing on_signal - not a list\n")
+            return
         printf("list - id: " + str(self.__id_) + " - on_signal: ")
         for element in argument:
             printf("[" + element + "] ")
@@ -56,9 +62,9 @@ def main():
     slot_1 = MyClass(1)
     slot_2 = MyClass(2)
 
-    signal = Signal()
-    signal.trigger.connect(slot_1.on_signal)
-    signal.trigger.connect(slot_2.on_signal)
+    signal_with_string = Signal()
+    signal_with_string.trigger.connect(slot_1.on_signal)
+    signal_with_string.trigger.connect(slot_2.on_signal)
 
     # Test for list
     slot_with_list = MyClassWithList(3)
@@ -67,10 +73,14 @@ def main():
     signal_with_list.trigger.connect(slot_with_list.on_signal)
 
     # Emit
-    signal.trigger.emit("I am a string.")
+    signal_with_string.trigger.emit("I am a string.")
     signal_with_list.trigger.emit(["Apple", "Orange", "Grape."])
-    signal.trigger.emit("I am another string!")
+    signal_with_string.trigger.emit("I am another string!")
     signal_with_list.trigger.emit(["I", "am", "another", "list!"])
+
+    # Emit invalid
+    signal_with_string.trigger.emit(["I", "shall", "not", "get", "printed!"])
+    signal_with_list.trigger.emit("I shall not get printed too!")
 
 if __name__ == "__main__":
     main()
