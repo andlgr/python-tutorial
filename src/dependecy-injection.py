@@ -4,7 +4,7 @@ from utils import *
 import random
 import abc
 
-class TemperatureDeviceInterface:
+class TemperatureDeviceInterface(abc.ABC):
     @abc.abstractmethod
     def start(self):
         pass
