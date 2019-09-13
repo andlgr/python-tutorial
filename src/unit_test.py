@@ -14,45 +14,45 @@ class ControllerTest(unittest.TestCase):
         test_value = 300.0
 
         # DUT dependency + Mock setup
-        device = [TemperatureDevice()]
-        device[0].get_temperature = mock.MagicMock(return_value=test_value)
+        mocked_device = [TemperatureDevice()]
+        mocked_device[0].get_temperature = mock.MagicMock(return_value=test_value)
 
         # DUT
-        controller = Controller(device)
+        controller = Controller(mocked_device)
 
         # Test and check
         self.assertEqual(test_value, controller.get_temperature())
 
         # Expectation
-        device[0].get_temperature.assert_called()
+        mocked_device[0].get_temperature.assert_called()
 
     def test_start(self):
         # DUT dependency + Mock setup
-        device = [TemperatureDevice()]
-        device[0].start = mock.MagicMock()
+        mocked_device = [TemperatureDevice()]
+        mocked_device[0].start = mock.MagicMock()
 
         # DUT
-        controller = Controller(device)
+        controller = Controller(mocked_device)
 
         # Test and check
         controller.start()
 
         # Expectation
-        device[0].start.assert_called_once()
+        mocked_device[0].start.assert_called_once()
 
     def test_stop(self):
         # DUT dependency + Mock setup
-        device = [TemperatureDevice()]
-        device[0].stop = mock.MagicMock()
+        mocked_device = [TemperatureDevice()]
+        mocked_device[0].stop = mock.MagicMock()
 
         # DUT
-        controller = Controller(device)
+        controller = Controller(mocked_device)
 
         # Test and check
         controller.stop()
 
         # Expectation
-        device[0].stop.assert_called_once()
+        mocked_device[0].stop.assert_called_once()
 
 
 if __name__ == '__main__':
