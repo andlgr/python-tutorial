@@ -51,27 +51,46 @@ class InvalidTemperatureDevice():
 
 
 class Controller:
-    def __init__(self, device):
-        if not isinstance(device, TemperatureDeviceInterface):
+    def __init__(self, device):  # Must be passed as list in order to keep reference
+        if not isinstance(device, list):
+            raise Exception("Please pass object inside a list in order to keep reference inside Controller")
+        if not isinstance(device[0], TemperatureDeviceInterface):
             raise Exception("Invalid device object type, please inherit from TemperatureDeviceInterface")
         self.__device_ = device
 
+    def start(self):
+        self.__device_[0].start()
+
+    def stop(self):
+        self.__device_[0].stop()
+
     def print_temperature(self):
-        printf("Temperature: " + str(self.__device_.get_temperature()) + " oC\n")
+        printf("Temperature: " + str(self.__device_[0].get_temperature()) + " oC\n")
+
+    def get_temperature(self) -> float:
+        return self.__device_[0].get_temperature()
 
 
 def main():
-    device = TemperatureDevice()
+    device = [TemperatureDevice()]
     controller = Controller(device)
     controller.print_temperature()
 
     try:
-        invalid_device = InvalidTemperatureDevice()
+        # Not inherited from TemperatureDeviceInterface - should raise an exception
+        invalid_device = [InvalidTemperatureDevice()]
         invalid_controller = Controller(invalid_device)
         invalid_controller.print_temperature()
     except Exception as err:
         printf("Cannot create controller: " + str(err) + "\n")
 
+    try:
+        # Not passing as list - should raise an exception
+        device = TemperatureDevice()
+        controller = Controller(device)
+        controller.print_temperature()
+    except Exception as err:
+        printf("Cannot create controller: " + str(err) + "\n")
 
 if __name__ == "__main__":
     main()
