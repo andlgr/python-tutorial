@@ -18,3 +18,6 @@ target_link_libraries(module ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})
 # Tweaks the name of the library to match what Python expects
 set_target_properties(module PROPERTIES SUFFIX .so)
 set_target_properties(module PROPERTIES PREFIX "")
+
+# Set C++14 support
+set_target_properties(module PROPERTIES CXX_STANDARD 14)
