@@ -1,7 +1,54 @@
 #include <cstdio>
 #include <boost/python.hpp>
+#include <functional>
+#include <thread>
 
 using namespace boost::python;
+
+struct PythonCallback {
+public:
+    PythonCallback(PyObject func) : cb_(func) {}
+    void operator() (const int& value) {
+        // Call the callback function in python
+        boost::python::call<int>(&cb_, value);
+    }
+private:
+    PyObject cb_;
+};
+
+class Dispatcher {
+ public:
+    Dispatcher() {
+   // sleep(3);
+        static std::thread thread = std::thread(std::bind(&Dispatcher::Run, this));
+    }
+
+    void Run() {
+        while (true) {
+            if (callback_) {
+                Call();
+                sleep(1);
+            } else {
+                fprintf(stderr, "No Callback\n");
+                sleep(1);
+            }
+        }
+    }
+
+    void SetCallback(PyObject callback) {
+        callback_ = new PythonCallback(callback);
+    }
+
+    void Call() {
+        static int counter = 0;
+        (*callback_)(counter);
+        //callback_(counter);
+        counter++;
+    }
+
+ private:
+    PythonCallback* callback_;
+};
 
 class MyPrinter {
  public:
@@ -34,6 +81,13 @@ class MyModule {
 };
 
 BOOST_PYTHON_MODULE(module) {
+    class_<Dispatcher>("Dispatcher", init<>())
+//        .def("set_callback", +[](Dispatcher& self, boost::python::object object) {
+//      self.SetCallback(object);
+//    });
+
+        .def("SetCallback", &Dispatcher::SetCallback);
+
     class_<MyPrinter>("MyPrinter", init<>())
         .def("Print", &MyPrinter::Print);
 
